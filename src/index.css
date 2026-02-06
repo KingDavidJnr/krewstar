@@ -13,3 +13,8 @@ html, body, #root {
   color: white;
   overflow-x: hidden; /* Prevents accidental side-scrolling */
 }
+
+.outline-text {
+  -webkit-text-stroke: 1px white;
+  color: transparent;
+}
