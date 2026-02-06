@@ -32,9 +32,11 @@ const Navbar = () => {
               {link.name}
             </Link>
           ))}
-          <button className="bg-white text-black px-5 py-2 rounded-full text-sm font-medium hover:bg-gray-200">
-            Contact
-          </button>
+          <Link to="/contact">
+  <button className="bg-white text-black px-5 py-2 rounded-full text-sm font-medium hover:bg-gray-200 transition-colors">
+    Contact
+  </button>
+</Link>
         </div>
 
         {/* Mobile Hamburger Button */}
