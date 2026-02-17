@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { X, Play } from "lucide-react";
 import PageTransition from "../components/PageTransition";
 
 const Work = () => {
   const [filter, setFilter] = useState("All");
+  const [selectedVideo, setSelectedVideo] = useState(null);
 
   const categories = ["All", "Video Production", "Motion Design", "Brand Identity", "Product Design", "3D Design"];
 
@@ -37,7 +39,7 @@ const Work = () => {
     <PageTransition>
       <main className="w-full bg-black text-white overflow-hidden">
         
-        {/* SECTION 1: Manifesto (Black BG) */}
+        {/* Header Section */}
         <section className="pt-48 pb-24 px-6 max-w-7xl mx-auto">
           <motion.h1 
             initial={{ opacity: 0, y: 20 }}
@@ -57,10 +59,8 @@ const Work = () => {
           </motion.p>
         </section>
 
-        {/* SECTION 2: Works Grid & Filtering */}
+        {/* Filter Section */}
         <section className="px-6 py-20 max-w-7xl mx-auto">
-          
-          {/* Categories Filter Bar */}
           <div className="flex flex-wrap gap-4 md:gap-8 mb-20 border-b border-white/10 pb-8">
             {categories.map((cat) => (
               <button
@@ -75,7 +75,7 @@ const Work = () => {
             ))}
           </div>
 
-          {/* Projects Grid (2 per row) */}
+          {/* Grid Section */}
           <motion.div layout className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-20">
             <AnimatePresence mode="popLayout">
               {filteredProjects.map((project) => (
@@ -85,21 +85,29 @@ const Work = () => {
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.9 }}
-                  transition={{ duration: 0.5 }}
-                  className="flex flex-col gap-6 group"
+                  className="flex flex-col gap-6 group cursor-pointer"
+                  onClick={() => project.type === "video" && setSelectedVideo(project.id)}
                 >
                   <div className="w-full aspect-video rounded-[32px] overflow-hidden border border-white/10 bg-white/5 relative">
                     {project.type === "video" ? (
-                      <>
-                        <div className="absolute inset-0 z-10 bg-transparent group-hover:pointer-events-none" />
+                      <div className="w-full h-full relative">
+                        {/* 4-Second Looping Preview using YouTube Embed API 
+                            - Muted, Autoplay, No controls, No info
+                        */}
                         <iframe
-                          className="w-full h-full object-cover pointer-events-none group-hover:pointer-events-auto transition-transform duration-700 group-hover:scale-105"
-                          src={`https://www.youtube.com/embed/${project.id}?autoplay=1&mute=1&loop=1&playlist=${project.id}&controls=1&modestbranding=1`}
+                          className="w-full h-full object-cover pointer-events-none scale-110"
+                          src={`https://www.youtube.com/embed/${project.id}?autoplay=1&mute=1&loop=1&playlist=${project.id}&controls=0&modestbranding=1&start=2&end=6`}
                           title={project.title}
                           allow="autoplay; encrypted-media"
-                          allowFullScreen
                         ></iframe>
-                      </>
+                        
+                        {/* Play Overlay */}
+                        <div className="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-all flex items-center justify-center">
+                           <div className="w-16 h-16 bg-white/10 backdrop-blur-md rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all scale-75 group-hover:scale-100">
+                              <Play fill="white" size={24} />
+                           </div>
+                        </div>
+                      </div>
                     ) : (
                       <img 
                         src={project.url} 
@@ -108,6 +116,7 @@ const Work = () => {
                       />
                     )}
                   </div>
+                  
                   <div className="flex justify-between items-start">
                     <h3 className="text-2xl md:text-3xl font-bold tracking-tight uppercase leading-tight max-w-[80%]">
                       {project.title}
@@ -122,12 +131,42 @@ const Work = () => {
           </motion.div>
         </section>
 
-        {/* Talk to Us Section */}
+        {/* Video Modal (Lightbox) */}
+        <AnimatePresence>
+          {selectedVideo && (
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-[200] bg-black/95 flex items-center justify-center p-4 md:p-10 backdrop-blur-md"
+              onClick={() => setSelectedVideo(null)}
+            >
+              <button className="absolute top-10 right-10 text-white z-[210]">
+                <X size={40} strokeWidth={1} />
+              </button>
+              
+              <motion.div 
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.8, opacity: 0 }}
+                className="w-full max-w-6xl aspect-video bg-black rounded-2xl overflow-hidden shadow-2xl"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <iframe
+                  className="w-full h-full"
+                  src={`https://www.youtube.com/embed/${selectedVideo}?autoplay=1&controls=1`}
+                  title="Full Project Video"
+                  allow="autoplay; encrypted-media"
+                  allowFullScreen
+                ></iframe>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Talk to Us */}
         <section className="py-60 px-6 flex justify-center items-center border-t border-white/5">
-          <a 
-            href="mailto:contact@krewstar.com" 
-            className="text-[16vw] font-black tracking-tighter leading-none uppercase transition-all duration-500 hover:text-[#d58e42] hover:italic"
-          >
+          <a href="mailto:contact@krewstar.com" className="text-[16vw] font-black tracking-tighter leading-none uppercase transition-all duration-500 hover:text-[#d58e42] hover:italic">
             TALK TO US
           </a>
         </section>
