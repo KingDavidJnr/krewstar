@@ -7,18 +7,15 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
   
-  // Initialize visibility: true if not on home, false if on home
   const isHomePage = location.pathname === "/";
   const [isVisible, setIsVisible] = useState(!isHomePage);
 
   useEffect(() => {
-    // If we are NOT on the homepage, the navbar should always be visible
     if (!isHomePage) {
       setIsVisible(true);
       return;
     }
 
-    // If we ARE on the homepage, apply the scroll listener
     const handleScroll = () => {
       if (window.scrollY > window.innerHeight - 100) {
         setIsVisible(true);
@@ -27,9 +24,7 @@ const Navbar = () => {
       }
     };
 
-    // Run once on mount/path change to check current scroll position
     handleScroll();
-
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, [isHomePage, location.pathname]);
@@ -51,17 +46,20 @@ const Navbar = () => {
           transition={{ duration: 0.4, ease: "easeInOut" }}
           className="fixed top-6 left-1/2 z-[100] w-[92%] max-w-4xl"
         >
-          {/* Main Navbar Bar */}
           <div className="bg-white/5 backdrop-blur-xl border border-white/10 px-6 py-4 rounded-full flex justify-between items-center shadow-2xl relative z-10">
+            {/* LOGO REPLACEMENT HERE */}
             <Link 
               to="/" 
-              className="text-xl font-bold tracking-tighter text-white" 
               onClick={() => setIsOpen(false)}
+              className="flex items-center"
             >
-              KREWSTAR
+              <img 
+                src="/Krewstar.svg" 
+                alt="Krewstar Logo" 
+                className="h-6 md:h-8 w-auto object-contain brightness-0 invert" 
+              />
             </Link>
             
-            {/* Desktop Links */}
             <div className="hidden md:flex gap-8 items-center">
               {navLinks.map((link) => (
                 <Link 
@@ -81,7 +79,6 @@ const Navbar = () => {
               </Link>
             </div>
 
-            {/* Mobile Hamburger Button */}
             <button 
               className="md:hidden text-white p-1"
               onClick={() => setIsOpen(!isOpen)}
@@ -90,7 +87,6 @@ const Navbar = () => {
             </button>
           </div>
 
-          {/* Mobile Dropdown Menu */}
           <AnimatePresence>
             {isOpen && (
               <motion.div

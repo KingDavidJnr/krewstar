@@ -33,31 +33,60 @@ const Home = () => {
         </section>
 
         {/* 2. White Section: Headline + Learn More */}
-        <section className="w-full bg-white text-black py-32 px-6">
-          <div className="max-w-7xl mx-auto text-center flex flex-col items-center">
-            <motion.h1 
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              className="text-[14vw] font-[1000] tracking-tighter leading-[0.8] uppercase mb-10 font-header"
-            >
-              WE ARE KREWSTAR
-            </motion.h1>
-            <motion.p 
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              className="text-xl md:text-3xl text-gray-600 max-w-3xl mx-auto font-medium leading-tight mb-12"
-            >
-              A production partner and creative agency that creates 
-              commercials and campaigns that deliver real business impact.
-            </motion.p>
-            
-            <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} transition={{ delay: 0.4 }}>
-                <Link to="/about" className="px-12 py-4 bg-black text-white rounded-full font-bold text-sm uppercase tracking-widest hover:bg-[#d58e42] transition-colors">
-                  Learn More
-                </Link>
-            </motion.div>
-          </div>
-        </section>
+<section className="w-full bg-white text-black py-40 px-6">
+  <div className="max-w-7xl mx-auto text-center flex flex-col items-center">
+    
+    {/* Main Headline: "We are [Logo]" */}
+    <motion.div 
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.8, ease: "easeOut" }}
+      className="flex flex-row items-center justify-center gap-3 md:gap-5 mb-10"
+    >
+      <h2 className="text-[10vw] md:text-[7.5vw] font-bold tracking-tighter leading-none">
+        We are
+      </h2>
+      <img 
+        src="/Krewstar.svg" 
+        alt="krewstar" 
+        className="h-[8vw] md:h-[6vw] w-auto object-contain" 
+        // Note: No 'brightness-0 invert' here so it remains black
+      />
+    </motion.div>
+
+    {/* Sub-headline */}
+    <motion.p 
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
+      transition={{ delay: 0.2 }}
+      className="text-lg md:text-2xl text-gray-800 max-w-3xl mx-auto font-medium leading-tight mb-14 px-4"
+    >
+      A production partner and creative agency that creates <br className="hidden md:block" />
+      commercials and campaigns that deliver real business impact.
+    </motion.p>
+    
+    {/* Learn More Button */}
+    <motion.div 
+      initial={{ opacity: 0 }} 
+      whileInView={{ opacity: 1 }} 
+      transition={{ delay: 0.4 }}
+    >
+        <Link 
+          to="/about" 
+          className="px-10 py-3 border border-[#d58e42] text-black rounded-full font-bold text-sm hover:bg-[#d58e42] hover:text-white transition-all duration-300"
+        >
+          Learn More
+        </Link>
+    </motion.div>
+
+    {/* Decorative Vertical Line (Seen in the reference image) */}
+    <motion.div 
+      initial={{ height: 0 }}
+      whileInView={{ height: 80 }}
+      className="w-[1px] bg-gray-200 mt-20"
+    />
+  </div>
+</section>
 
         {/* 3. 6 YouTube Videos Grid - Lightbox Logic Integrated */}
         <section className="px-6 py-32 max-w-7xl mx-auto">
