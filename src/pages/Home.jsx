@@ -1,15 +1,23 @@
-import { useState } from "react";
+import { useState, useRef } from "react"; // Added useRef here
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
-import { X, Play } from "lucide-react";
+import { X, Play, Volume2, VolumeX } from "lucide-react"; // Added Volume icons
 import PageTransition from "../components/PageTransition";
 
 const Home = () => {
   const [selectedVideo, setSelectedVideo] = useState(null);
+  const videoRef = useRef(null);
+  const [isMuted, setIsMuted] = useState(true);
 
-  // 16 Logo Placeholders
+  // Toggle audio function
+  const toggleMute = () => {
+    if (videoRef.current) {
+      videoRef.current.muted = !videoRef.current.muted;
+      setIsMuted(videoRef.current.muted);
+    }
+  };
+
   const logos = Array.from({ length: 16 }, (_, i) => `/logos/brand-${i + 1}.png`);
-  
   const sliderItems = ["Graphic Design", "Production", "Commercials", "Campaigns", "Branding", "Strategy"];
 
   const youtubeWorks = [
@@ -25,70 +33,70 @@ const Home = () => {
     <PageTransition>
       <main className="bg-[#0a0a0a] text-white w-full overflow-hidden font-sans">
         
-        {/* 1. Main Top Video - Full Screen Hero */}
+        {/* 1. Main Top Video - Protected & Always Visible Navbar Compatible */}
         <section className="w-full h-screen bg-black relative">
-          <video autoPlay muted loop playsInline controls className="w-full h-full object-cover">
+          <video 
+            ref={videoRef}
+            autoPlay 
+            muted={isMuted} 
+            loop 
+            playsInline 
+            // Removed 'controls' to prevent downloading
+            className="w-full h-full object-cover pointer-events-none"
+            // Disables right-click to prevent "Save Video As"
+            onContextMenu={(e) => e.preventDefault()}
+          >
             <source src="https://res.cloudinary.com/dvbqxhkh6/video/upload/v1770338086/home_page_video_Krewstar_r7p99t.mp4" type="video/mp4" />
           </video>
+
+          {/* Custom Mute Toggle */}
+          <button 
+            onClick={toggleMute}
+            className="absolute bottom-10 right-10 z-50 p-4 bg-white/10 backdrop-blur-md border border-white/20 rounded-full hover:bg-white/20 transition-all text-white shadow-xl"
+          >
+            {isMuted ? <VolumeX size={24} /> : <Volume2 size={24} />}
+          </button>
         </section>
 
         {/* 2. White Section: Headline + Learn More */}
-<section className="w-full bg-white text-black py-40 px-6">
-  <div className="max-w-7xl mx-auto text-center flex flex-col items-center">
-    
-    {/* Main Headline: "We are [Logo]" */}
-    <motion.div 
-      initial={{ opacity: 0, y: 40 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.8, ease: "easeOut" }}
-      className="flex flex-row items-center justify-center gap-3 md:gap-5 mb-10"
-    >
-      <h2 className="text-[10vw] md:text-[7.5vw] font-bold tracking-tighter leading-none">
-        We are
-      </h2>
-      <img 
-        src="/Krewstar.svg" 
-        alt="krewstar" 
-        className="h-[8vw] md:h-[6vw] w-auto object-contain" 
-        // Note: No 'brightness-0 invert' here so it remains black
-      />
-    </motion.div>
+        <section className="w-full bg-white text-black py-40 px-6">
+          <div className="max-w-7xl mx-auto text-center flex flex-col items-center">
+            <motion.div 
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
+              className="flex flex-row items-center justify-center gap-3 md:gap-5 mb-10"
+            >
+              <h2 className="text-[10vw] md:text-[7.5vw] font-bold tracking-tighter leading-none">
+                We are
+              </h2>
+              <img 
+                src="/Krewstar.svg" 
+                alt="krewstar" 
+                className="h-[8vw] md:h-[6vw] w-auto object-contain" 
+              />
+            </motion.div>
 
-    {/* Sub-headline */}
-    <motion.p 
-      initial={{ opacity: 0 }}
-      whileInView={{ opacity: 1 }}
-      transition={{ delay: 0.2 }}
-      className="text-lg md:text-2xl text-gray-800 max-w-3xl mx-auto font-medium leading-tight mb-14 px-4"
-    >
-      A production partner and creative agency that creates <br className="hidden md:block" />
-      commercials and campaigns that deliver real business impact.
-    </motion.p>
-    
-    {/* Learn More Button */}
-    <motion.div 
-      initial={{ opacity: 0 }} 
-      whileInView={{ opacity: 1 }} 
-      transition={{ delay: 0.4 }}
-    >
-        <Link 
-          to="/about" 
-          className="px-10 py-3 border border-[#d58e42] text-black rounded-full font-bold text-sm hover:bg-[#d58e42] hover:text-white transition-all duration-300"
-        >
-          Learn More
-        </Link>
-    </motion.div>
+            <motion.p 
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              transition={{ delay: 0.2 }}
+              className="text-lg md:text-2xl text-gray-800 max-w-3xl mx-auto font-medium leading-tight mb-14 px-4"
+            >
+              A production partner and creative agency that creates <br className="hidden md:block" />
+              commercials and campaigns that deliver real business impact.
+            </motion.p>
+            
+            <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} transition={{ delay: 0.4 }}>
+                <Link to="/about" className="px-10 py-3 border border-[#d58e42] text-black rounded-full font-bold text-sm hover:bg-[#d58e42] hover:text-white transition-all duration-300">
+                  Learn More
+                </Link>
+            </motion.div>
+            <motion.div initial={{ height: 0 }} whileInView={{ height: 80 }} className="w-[1px] bg-gray-200 mt-20" />
+          </div>
+        </section>
 
-    {/* Decorative Vertical Line (Seen in the reference image) */}
-    <motion.div 
-      initial={{ height: 0 }}
-      whileInView={{ height: 80 }}
-      className="w-[1px] bg-gray-200 mt-20"
-    />
-  </div>
-</section>
-
-        {/* 3. 6 YouTube Videos Grid - Lightbox Logic Integrated */}
+        {/* 3. YouTube Videos Grid */}
         <section className="px-6 py-32 max-w-7xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {youtubeWorks.map((work, index) => (
@@ -97,15 +105,12 @@ const Home = () => {
                 className="aspect-video bg-white/5 rounded-[32px] overflow-hidden border border-white/10 relative group cursor-pointer"
                 onClick={() => setSelectedVideo(work.id)}
               >
-                {/* 4-Second Teaser Preview (No UI) */}
                 <iframe
                   className="w-full h-full object-cover pointer-events-none scale-110"
                   src={`https://www.youtube.com/embed/${work.id}?autoplay=1&mute=1&loop=1&playlist=${work.id}&controls=0&modestbranding=1&start=15&end=19`}
                   title={work.title}
                   allow="autoplay; encrypted-media"
                 ></iframe>
-
-                {/* Play Button Overlay */}
                 <div className="absolute inset-0 bg-black/30 group-hover:bg-black/10 transition-all flex items-center justify-center">
                    <div className="w-16 h-16 bg-white/10 backdrop-blur-md rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all scale-75 group-hover:scale-100">
                       <Play fill="white" size={24} />
@@ -121,30 +126,25 @@ const Home = () => {
           </div>
         </section>
 
-        {/* 5. Brands Section */}
+        {/* 5. Brands Section - Fixed Faded Logo Logic */}
         <section className="px-6 py-32 max-w-7xl mx-auto border-t border-white/5">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-20 gap-8">
             <h2 className="text-5xl md:text-7xl font-bold tracking-tighter leading-none uppercase text-[#d58e42] font-header">
               Brands that have <br /> trusted us
             </h2>
-            <a 
-              href="mailto:contact@krewstar.com" 
-              className="px-8 py-4 bg-[#d58e42] text-black rounded-full font-bold text-sm uppercase hover:bg-white transition-all"
-            >
+            <a href="mailto:contact@krewstar.com" className="px-8 py-4 bg-[#d58e42] text-black rounded-full font-bold text-sm uppercase hover:bg-white transition-all">
               BECOME A KREWSTAR CLIENT
             </a>
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-x-12 gap-y-16 items-center">
             {logos.map((logoPath, i) => (
-              <div 
-                key={i} 
-                className="w-full h-20 flex items-center justify-center border border-white/5 bg-white/[0.03] rounded-xl relative overflow-hidden"
-              >
+              <div key={i} className="w-full h-20 flex items-center justify-center border border-white/5 bg-white/[0.03] rounded-xl relative overflow-hidden">
                 <img 
                   src={logoPath} 
                   alt={`Brand logo ${i + 1}`} 
-                  className="h-10 w-auto object-contain relative z-10 grayscale invert brightness-200"
+                  // Spotify fix: Reduced brightness so thin logos stay visible
+                  className="h-8 md:h-10 w-auto object-contain relative z-10 grayscale invert brightness-110 opacity-70 hover:opacity-100 transition-all duration-500"
                   onError={(e) => { e.target.style.opacity = '0'; }}
                 />
               </div>
@@ -152,7 +152,9 @@ const Home = () => {
           </div>
         </section>
 
-        {/* 6. Numbers & Facts (White Section) */}
+        {/* ... Sections 6, 7, 8, 9 remain the same ... */}
+
+        {/* 6. Numbers & Facts */}
         <section className="bg-white text-black py-40 px-6 font-header">
           <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16">
             {[
@@ -200,15 +202,11 @@ const Home = () => {
 
         {/* 9. Giant Talk to Us */}
         <section className="py-60 px-6 flex justify-center items-center font-header">
-          <a 
-            href="mailto:contact@krewstar.com" 
-            className="text-[16vw] font-black tracking-tighter leading-none uppercase transition-all duration-500 hover:text-[#d58e42] hover:italic"
-          >
+          <a href="mailto:contact@krewstar.com" className="text-[16vw] font-black tracking-tighter leading-none uppercase transition-all duration-500 hover:text-[#d58e42] hover:italic">
             TALK TO US
           </a>
         </section>
 
-        {/* FULL SCREEN MODAL / LIGHTBOX */}
         <AnimatePresence>
           {selectedVideo && (
             <motion.div 
@@ -218,10 +216,9 @@ const Home = () => {
               className="fixed inset-0 z-[200] bg-black/95 flex items-center justify-center p-4 md:p-10 backdrop-blur-md"
               onClick={() => setSelectedVideo(null)}
             >
-              <button className="absolute top-10 right-10 text-white z-[210] hover:text-[#d58e42] transition-colors">
+              <button className="absolute top-10 right-10 text-white z-[210]">
                 <X size={40} strokeWidth={1} />
               </button>
-              
               <motion.div 
                 initial={{ scale: 0.8, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
@@ -240,7 +237,6 @@ const Home = () => {
             </motion.div>
           )}
         </AnimatePresence>
-
       </main>
     </PageTransition>
   );
