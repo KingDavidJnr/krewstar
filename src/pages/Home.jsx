@@ -137,19 +137,39 @@ const Home = () => {
             </a>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-x-12 gap-y-16 items-center">
-            {logos.map((logoPath, i) => (
-              <div key={i} className="w-full h-20 flex items-center justify-center border border-white/5 bg-white/[0.03] rounded-xl relative overflow-hidden">
-                <img 
-                  src={logoPath} 
-                  alt={`Brand logo ${i + 1}`} 
-                  // Spotify fix: Reduced brightness so thin logos stay visible
-                  className="h-8 md:h-10 w-auto object-contain relative z-10 grayscale invert brightness-110 opacity-70 hover:opacity-100 transition-all duration-500"
-                  onError={(e) => { e.target.style.opacity = '0'; }}
-                />
-              </div>
-            ))}
-          </div>
+         <div className="grid grid-cols-2 md:grid-cols-4 gap-x-12 gap-y-16 items-center">
+  {logos.map((logoPath, i) => {
+    // Spotify is the 3rd item in your visual grid (Index 2)
+    const isSpotify = i === 2; 
+
+    return (
+      <div 
+        key={i} 
+        className="group w-full h-20 flex items-center justify-center border border-white/5 bg-white/[0.03] rounded-xl relative overflow-hidden cursor-pointer"
+      >
+        <img 
+          src={logoPath} 
+          alt={`Brand logo ${i + 1}`} 
+          className={`h-8 md:h-10 w-auto object-contain relative z-10 transition-all duration-500
+            /* 1. Base State: Spotify is forced to 100% white, others are 60% white */
+            ${isSpotify 
+              ? "brightness-0 invert opacity-100" 
+              : "grayscale invert opacity-60"
+            } 
+            
+            /* 2. Hover State: Clear base filters and apply Krewstar Orange */
+            group-hover:scale-110 
+            group-hover:opacity-100 
+            group-hover:grayscale-0 
+            group-hover:invert-0 
+            group-hover:brightness-100
+            group-hover:filter-krewstar-orange`}
+          onError={(e) => { e.target.style.opacity = '0'; }}
+        />
+      </div>
+    );
+  })}
+</div>
         </section>
 
         {/* ... Sections 6, 7, 8, 9 remain the same ... */}

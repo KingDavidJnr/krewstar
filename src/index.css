@@ -18,3 +18,10 @@ html, body, #root {
   -webkit-text-stroke: 1px white;
   color: transparent;
 }
+
+@layer utilities {
+  .filter-krewstar-orange {
+    /* Verified filter to reach #d58e42 regardless of original color */
+    filter: brightness(0) saturate(100%) invert(65%) sepia(54%) saturate(568%) hue-rotate(348deg) brightness(90%) contrast(88%);
+  }
+}
